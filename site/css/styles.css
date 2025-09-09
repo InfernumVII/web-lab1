@@ -1,10 +1,24 @@
 body {
-    background-color: rgba(24, 25, 27, 255);
+    background: linear-gradient(135deg, #0f0f1a, #000000);
+    min-height: 100vh; /*100% view */
 }
 #header {
     text-align: center;
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(110, 58, 255, 0.2);
+    border-radius: 8px;
+    animation: pulse 2s infinite;
 }
-/* https://stackoverflow.com/a/78689774 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+    100% { transform: scale(1); }
+}
+#content {
+    margin: 20px;
+    color: white
+}
+/* https://stackoverflow.com/a/78689774
 html {
   --border-width: 10px;
   padding: var(--border-width);
@@ -14,6 +28,6 @@ html {
     inset: 0;
     border: solid var(--border-width);
     border-radius: 20px;
-    color: rgba(16, 17, 18, 255)
+    color: rgba(69, 70, 79, 255)
   }
-}
+} */

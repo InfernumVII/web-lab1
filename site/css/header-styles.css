@@ -1,7 +1,11 @@
+/* https://stackoverflow.com/a/37832318 */
 .header-item {
     font-family: fantasy;
     display: inline;
     font-size: 20px;
-    color: white;
+    color: transparent;
     margin: 20px;
+    background-clip: text;
+    background: linear-gradient(45deg, #6e3aff, #ff3864);
+    -webkit-background-clip: text; 
 }
