@@ -1,0 +1,19 @@
+body {
+    background-color: rgba(24, 25, 27, 255);
+}
+#header {
+    text-align: center;
+}
+/* https://stackoverflow.com/a/78689774 */
+html {
+  --border-width: 10px;
+  padding: var(--border-width);
+  &:before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    border: solid var(--border-width);
+    border-radius: 20px;
+    color: rgba(16, 17, 18, 255)
+  }
+}
