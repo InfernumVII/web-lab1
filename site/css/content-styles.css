@@ -1,0 +1,17 @@
+svg {
+    border: 1px solid white;
+}
+svg text {
+    font: italic 13px arial;
+    fill: white
+}
+input[type="radio"] {
+    display: inline;
+}
+label {
+    margin-right: 7px;
+}
+fieldset {
+    display: block;
+    width: fit-content;
+}
