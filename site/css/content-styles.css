@@ -20,11 +20,24 @@ input[type="text"]{
     border: none;
     color: white;
 }
-.input-text-error {
+#input-text-error {
     color: #DC143C;
     font-size: 12px;
     margin-bottom: 2px;
 }
 .figures {
     fill: #3399FF;
+}
+#button-submit {
+    margin-top: 5px;
+    background: linear-gradient(45deg, #6e3aff, #ff3864);
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 100px;
+    height: 30px;
+}
+#button-submit:disabled {
+    background: linear-gradient(45deg, #412296, #96213A);
 }

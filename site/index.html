@@ -100,10 +100,8 @@
                 </fieldset>
                 <fieldset>
                     <legend>Y</legend>
-                    <div class="input-text-error">
-                        Error: y should be between
-                    </div>
-                    <input type="text" placeholder="Enter y cord: ">
+                    <div id="input-text-error"></div>
+                    <input id="input-y" type="text" placeholder="Enter y cord: " oninput="onInputTextUpdate(this.value)" value="1">
                 </fieldset>
                 <fieldset>
                     <legend>R</legend>
@@ -121,6 +119,9 @@
                     </div>
                 </fieldset>
             </div>
+            <button id="button-submit" type="button" onclick="submitOnClick()">
+                SUBMIT
+            </button>
         </div>
     </body>
     
