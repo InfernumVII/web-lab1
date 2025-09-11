@@ -40,7 +40,7 @@ function submitOnClick(){
     })
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
+        alert(data);//1
     })
     .catch((error) => {
        console.error(error); 
