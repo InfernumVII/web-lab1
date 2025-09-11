@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.fastcgi.*;
@@ -19,8 +20,11 @@ import com.google.gson.*;
 
 public class App {
     private final static int HISTORY_SIZE = 18;
-    private static Deque<Cords> history = new ArrayDeque<Cords>(HISTORY_SIZE);
+    private static Deque<TableRow> history = new ArrayDeque<TableRow>(HISTORY_SIZE);
     public static void main(String[] args) throws IOException {
+        long startTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+
+         
         System.setProperty("FCGI_PORT", "9000");
         FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
         var fcgiInterface = new FCGIInterface();
@@ -36,20 +40,30 @@ public class App {
                 filePrinter.getPrintWriter().println(jsonRaw);
                 Gson gson = new Gson();
                 Cords cords = gson.fromJson(jsonRaw, Cords.class);
-                storeCords(cords);
+                boolean success = checkPointInTheArea(cords);
+                TableRow tableRow = new TableRow(
+                    cords,
+                    TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()),
+                    TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) - startTimeSeconds,
+                    success
+                );
+                
+                storeRow(tableRow);
+                String answer = gson.toJson(history);
+
                 System.out.println("Status: 200 OK");
                 System.out.println("Content-Type: text/plain");
                 System.out.println();
-                System.out.println(checkPointInTheArea(cords));
+                System.out.println(answer);
             }
         }
     }
 
-    private static void storeCords(Cords cords){
+    private static void storeRow(TableRow row){
         if (history.size() >= HISTORY_SIZE) {
             history.removeFirst(); 
         }
-        history.addLast(cords);
+        history.addLast(row);
     }
 
     private static boolean checkPointInTheArea(Cords cords){

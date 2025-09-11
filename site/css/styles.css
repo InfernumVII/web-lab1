@@ -15,8 +15,8 @@ body {
     100% { transform: scale(1); }
 }
 #content {
-    margin: 20px;
-    color: white
+  margin: 20px;
+  color: white;
 }
 /* https://stackoverflow.com/a/78689774
 html {

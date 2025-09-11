@@ -1,4 +1,14 @@
 const numberRegex = new RegExp("^-?\\d+$")
+const tableHeader = `
+<tr>
+    <th>x</th>
+    <th>y</th>
+    <th>R</th>
+    <th>currentTime</th>
+    <th>timeFromStart</th>
+    <th>Success</th>
+</tr>
+`
 function checkDecimal(text){
     return numberRegex.test(text)
 }
@@ -40,7 +50,20 @@ function submitOnClick(){
     })
     .then((response) => response.json())
     .then((data) => {
-        alert(data);//1
+        let tableContent = tableHeader;
+        data.forEach(element => {
+            tableContent += `
+            <tr>
+                <td>${element.cords.x}</td>
+                <td>${element.cords.y}</td>
+                <td>${element.cords.R}</td>
+                <td>${element.timeFromStartSeconds}</td>
+                <td>${element.currentTimeSeconds}</td>
+                <td>${element.success}</td>
+            </tr>
+            `
+        });
+        document.getElementById("info-table").innerHTML = `<table>${tableContent}</table>`
     })
     .catch((error) => {
        console.error(error); 

@@ -44,11 +44,11 @@ input[type="text"]{
 .chart {
     width: fit-content;
 }
-.info-table {
+#info-table {
     width: fit-content;
     margin-left: 10px;
 }
-.info-table table, th, td {
+#info-table table, th, td {
     border:1px solid white;
 }
 .first-row {
