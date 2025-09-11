@@ -18,7 +18,7 @@ import com.fastcgi.*;
 import com.google.gson.*;
 
 public class App {
-    private final static int HISTORY_SIZE = 5;
+    private final static int HISTORY_SIZE = 18;
     private static Deque<Cords> history = new ArrayDeque<Cords>(HISTORY_SIZE);
     public static void main(String[] args) throws IOException {
         System.setProperty("FCGI_PORT", "9000");

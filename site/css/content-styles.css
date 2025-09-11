@@ -41,3 +41,16 @@ input[type="text"]{
 #button-submit:disabled {
     background: linear-gradient(45deg, #412296, #96213A);
 }
+.chart {
+    width: fit-content;
+}
+.info-table {
+    width: fit-content;
+    margin-left: 10px;
+}
+.info-table table, th, td {
+    border:1px solid white;
+}
+.first-row {
+    display: flex;
+}
