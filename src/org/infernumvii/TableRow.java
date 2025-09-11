@@ -24,8 +24,14 @@ public class TableRow {
     public long getTimeFromStartSeconds() {
         return timeFromStartSeconds;
     }
-    
+
     public boolean isSuccess() {
         return success;
+    }
+
+    @Override
+    public String toString() {
+        return "TableRow [cords=" + cords + ", currentTimeSeconds=" + currentTimeSeconds + ", timeFromStartSeconds="
+                + timeFromStartSeconds + ", success=" + success + "]";
     }
 }

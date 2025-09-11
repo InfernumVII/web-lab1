@@ -11,10 +11,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
 public class FilePrinter {
-    private final PrintWriter printWriter;
+    private PrintWriter printWriter = null;
 
-    public FilePrinter(Path path) throws IOException{
-        printWriter = new PrintWriter(Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND), true);
+    public FilePrinter(Path path){
+        try {
+            printWriter = new PrintWriter(Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     public PrintWriter getPrintWriter() {
@@ -22,13 +27,8 @@ public class FilePrinter {
     }
     
     public static void main(String[] args) {
-        try {
-            FilePrinter simpliestLogger = new FilePrinter(Path.of("logs/log.txt"));
-            simpliestLogger.getPrintWriter().println("123");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        FilePrinter simpliestLogger = new FilePrinter(Path.of("logs/log.txt"));
+        simpliestLogger.getPrintWriter().println("123");
     }
 
 

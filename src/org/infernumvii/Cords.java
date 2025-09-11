@@ -20,4 +20,10 @@ public class Cords {
         return "Cords [x=" + x + ", y=" + y + ", R=" + R + "]";
     }
     
+    public boolean IsPointInTheArea(){
+        boolean circleCond = (x >= 0 && y >= 0 && x * x + y * y <= R*R/4);
+        boolean triangleCond = (x <= 0 && y <= 0 && x >= -R && y >= -R && y >= x - R);
+        boolean squareCond = (x >= 0 && y <= 0 && x <= R && y >= -R);
+        return circleCond || triangleCond || squareCond;
+    }
 }
