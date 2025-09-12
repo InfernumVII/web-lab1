@@ -391,3 +391,10 @@ Body: {
 }
 Error: com.google.gson.stream.MalformedJsonException: Expected name at line 5 column 2 path $.y
 See https://github.com/google/gson/blob/main/Troubleshooting.md#malformed-json
+Started
+Request: POST
+Body: {
+    "x": 1,
+    "y": 2,
+    
+}
