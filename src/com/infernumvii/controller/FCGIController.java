@@ -15,8 +15,6 @@ import com.infernumvii.http.Response;
 import com.infernumvii.http.StatusCode;
 
 public class FCGIController {
-    //TODO Выводить время работы бэка
-    //TODO добавить проверку на бэке на строки и т.д
     private String port = "9000";
     private FCGIInterface fcgiInterface = new FCGIInterface();
 
