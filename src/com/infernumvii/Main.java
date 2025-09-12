@@ -19,12 +19,13 @@ import com.fastcgi.*;
 import com.google.gson.*;
 import com.infernumvii.controller.FCGIController;
 import com.infernumvii.controller.TableController;
+import com.infernumvii.exception.CordsInvalidFormat;
 import com.infernumvii.util.FilePrinter;
 
 public class Main {
     private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
     public static void main(String[] args) {
-        FCGIController fcgiController = new FCGIController("27001");
+        FCGIController fcgiController = new FCGIController("9000");
         TableController tableController = new TableController();
         try {
             fcgiController.start(tableController::storeRowAndReturnAllTable);

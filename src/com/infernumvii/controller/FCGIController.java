@@ -38,8 +38,10 @@ public class FCGIController {
         Main.getFilePrinter().getPrintWriter().println("Started");
         while (fcgiInterface.FCGIaccept() >= 0) {
             try {
+                //Main.getFilePrinter().getPrintWriter().println(FCGIInterface.request.params);
                 String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
-                Main.getFilePrinter().getPrintWriter().println(String.format("Request: %s", method));
+                String uri = FCGIInterface.request.params.getProperty("REQUEST_URI");
+                Main.getFilePrinter().getPrintWriter().println(String.format("Request: %s, %s", method, uri));
                 if (method.equals("POST")){
                     String body = getBody();
                     Main.getFilePrinter().getPrintWriter().println(String.format("Body: %s", body));

@@ -2,14 +2,14 @@ package com.infernumvii.model;
 
 public class TableRow {
     private Cords cords;
-    private long currentTimeSeconds;
-    private long timeFromStartSeconds;
+    private String currentTimeSeconds;
+    private long timeExecution;
     private boolean success;
     
-    public TableRow(Cords cords, long currentTimeSeconds, long timeFromStartSeconds, boolean success) {
+    public TableRow(Cords cords, String currentTimeSeconds, long timeExecution, boolean success) {
         this.cords = cords;
         this.currentTimeSeconds = currentTimeSeconds;
-        this.timeFromStartSeconds = timeFromStartSeconds;
+        this.timeExecution = timeExecution;
         this.success = success;
     }
     
@@ -17,12 +17,12 @@ public class TableRow {
         return cords;
     }
 
-    public long getCurrentTimeSeconds() {
+    public String getCurrentTimeSeconds() {
         return currentTimeSeconds;
     }
-
-    public long getTimeFromStartSeconds() {
-        return timeFromStartSeconds;
+    
+    public long getTimeExecution() {
+        return timeExecution;
     }
 
     public boolean isSuccess() {
@@ -32,6 +32,6 @@ public class TableRow {
     @Override
     public String toString() {
         return "TableRow [cords=" + cords + ", currentTimeSeconds=" + currentTimeSeconds + ", timeFromStartSeconds="
-                + timeFromStartSeconds + ", success=" + success + "]";
-    }
+                + timeExecution + ", success=" + success + "]";
+    }  
 }

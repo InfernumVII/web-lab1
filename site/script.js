@@ -1,27 +1,27 @@
-const numberRegex = new RegExp("^-?\\d+$")
+const numberRegex = new RegExp("^-?\\d+\\.?\\d+$")
 const tableHeader = `
 <tr>
     <th>x</th>
     <th>y</th>
     <th>R</th>
     <th>currentTime</th>
-    <th>timeFromStart</th>
+    <th>timeExecution</th>
     <th>Success</th>
 </tr>
 `
-function checkDecimal(text){
+function checkNumber(text){
     return numberRegex.test(text)
 }
 function checkNumberBetween(a, b, number){
-    return number >= -5 && number <= 3
+    return number >= a && number <= b
 }
 function checkValueWithError(text){
     let errorText = ""
     let success = false
-    if (!checkDecimal(text)){
+    if (!checkNumber(text)){
         errorText = "Error: value should be number"
     } else {
-        if (!checkNumberBetween(-5, -3, text)){
+        if (!checkNumberBetween(-5, 3, text)){
             errorText = "Error: value should be between -5 and 3"
         } else {
             success = true
@@ -38,7 +38,7 @@ function onInputTextUpdate(text){
 function submitOnClick(){
     var data = {
         x: parseInt(document.querySelector('input[name="X"]:checked').value),
-        y: parseInt(document.querySelector('#input-y').value), 
+        y: parseFloat(document.querySelector('#input-y').value), 
         R: parseInt(document.querySelector('input[name="R"]:checked').value)
     }
     fetch("fcgi-app", {
@@ -57,8 +57,8 @@ function submitOnClick(){
                 <td>${element.cords.x}</td>
                 <td>${element.cords.y}</td>
                 <td>${element.cords.R}</td>
-                <td>${element.timeFromStartSeconds}</td>
                 <td>${element.currentTimeSeconds}</td>
+                <td>${element.timeExecution}</td>
                 <td>${element.success}</td>
             </tr>
             `
