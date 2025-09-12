@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.controller;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -9,11 +9,14 @@ import java.util.stream.Collectors;
 
 import com.fastcgi.FCGIInterface;
 import com.google.gson.Gson;
+import com.infernumvii.Main;
+import com.infernumvii.http.ContentType;
+import com.infernumvii.http.Response;
+import com.infernumvii.http.StatusCode;
 
 public class FCGIController {
     private String port = "9000";
     private FCGIInterface fcgiInterface = new FCGIInterface();
-    private Gson gson = new Gson();
 
     public FCGIController(String port){
         this.port = port;
@@ -51,7 +54,7 @@ public class FCGIController {
                 );
                 continue;
             }
-            
+
             System.out.println(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_405)

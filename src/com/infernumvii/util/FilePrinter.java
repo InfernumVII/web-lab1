@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

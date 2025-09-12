@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.model;
 
 public class TableRow {
     private Cords cords;

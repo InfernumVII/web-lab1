@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 
 import com.fastcgi.*;
 import com.google.gson.*;
+import com.infernumvii.controller.FCGIController;
+import com.infernumvii.controller.TableController;
+import com.infernumvii.util.FilePrinter;
 
 public class Main {
     private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));

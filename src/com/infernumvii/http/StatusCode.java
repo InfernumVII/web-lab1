@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.http;
 
 public enum StatusCode {
     C_200(200, "OK"),

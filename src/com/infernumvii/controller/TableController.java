@@ -1,10 +1,12 @@
-package org.infernumvii;
+package com.infernumvii.controller;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
+import com.infernumvii.model.Cords;
+import com.infernumvii.model.TableRow;
 
 public class TableController {
     private final int HISTORY_SIZE = 18;

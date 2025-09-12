@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.http;
 
 import java.util.StringJoiner;
 

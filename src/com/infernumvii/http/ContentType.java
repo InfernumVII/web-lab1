@@ -1,4 +1,4 @@
-package org.infernumvii;
+package com.infernumvii.http;
 
 
 public enum ContentType {

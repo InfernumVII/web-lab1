@@ -29,7 +29,7 @@ input[type="text"]{
     fill: #3399FF;
 }
 #button-submit {
-    margin-top: 5px;
+    margin-top: 10px;
     background: linear-gradient(45deg, #6e3aff, #ff3864);
     cursor: pointer;
     border: none;
@@ -37,6 +37,11 @@ input[type="text"]{
     color: white;
     width: 100px;
     height: 30px;
+    transform: translateY(0);
+    transition: transform 0.3s;
+}
+#button-submit:hover {
+    transform: translateY(-5px);
 }
 #button-submit:disabled {
     background: linear-gradient(45deg, #412296, #96213A);
