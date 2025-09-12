@@ -25,6 +25,8 @@ import com.infernumvii.util.FilePrinter;
 public class Main {
     private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
     public static void main(String[] args) {
+        String s = "0.2133463511111";
+        filePrinter.getPrintWriter().println(Float.parseFloat(s));
         FCGIController fcgiController = new FCGIController("9000");
         TableController tableController = new TableController();
         try {

@@ -56,7 +56,8 @@ input[type="text"]{
 }
 #info-table table, th, td {
     border:1px solid white;
-    max-width: 60vh;
+    max-width: 60vw;
+    word-break: break-all;
 }
 .first-row {
     display: flex;
