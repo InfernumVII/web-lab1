@@ -35,34 +35,44 @@ public class FCGIController {
     public void start(Function<String, String> handler) throws IOException{
         Main.getFilePrinter().getPrintWriter().println("Started");
         while (fcgiInterface.FCGIaccept() >= 0) {
-            String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
-            Main.getFilePrinter().getPrintWriter().println(String.format("Request: %s", method));
-            if (method.equals("POST")){
-                String body = getBody();
-                Main.getFilePrinter().getPrintWriter().println(String.format("Body: %s", body));
-                
-                String answer = (String) handler.apply(body);
-                Main.getFilePrinter().getPrintWriter().println(String.format("Answer: %s", answer));
+            try {
+                String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
+                Main.getFilePrinter().getPrintWriter().println(String.format("Request: %s", method));
+                if (method.equals("POST")){
+                    String body = getBody();
+                    Main.getFilePrinter().getPrintWriter().println(String.format("Body: %s", body));
+                    
+                    String answer = (String) handler.apply(body);
+                    Main.getFilePrinter().getPrintWriter().println(String.format("Answer: %s", answer));
+                    
+                    System.out.println(
+                        new Response.Builder()
+                        .withStatusCode(StatusCode.C_200)
+                        .withContentType(ContentType.APPLICATION_JSON)
+                        .withBody(answer)
+                        .build()
+                        .toString()
+                    );
+                    continue;
+                }
                 
                 System.out.println(
                     new Response.Builder()
-                    .withStatusCode(StatusCode.C_200)
-                    .withContentType(ContentType.APPLICATION_JSON)
-                    .withBody(answer)
+                    .withStatusCode(StatusCode.C_405)
+                    .withContentType(ContentType.TEXT_PLAIN)
+                    .withBody("Method is not allowed")
                     .build()
                     .toString()
                 );
-                continue;
+            } catch (Exception e) {
+                System.out.println(
+                    new Response.Builder()
+                    .withStatusCode(StatusCode.C_400)
+                    .withContentType(ContentType.TEXT_PLAIN)
+                    .withBody(e.getMessage())
+                    .build()
+                    .toString());
             }
-
-            System.out.println(
-                new Response.Builder()
-                .withStatusCode(StatusCode.C_405)
-                .withContentType(ContentType.TEXT_PLAIN)
-                .withBody("Method is not allowed")
-                .build()
-                .toString()
-            );
         }
     }
 
