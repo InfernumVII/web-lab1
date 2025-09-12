@@ -24,7 +24,7 @@ import com.infernumvii.util.FilePrinter;
 public class Main {
     private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
     public static void main(String[] args) {
-        FCGIController fcgiController = new FCGIController("9000");
+        FCGIController fcgiController = new FCGIController("27001");
         TableController tableController = new TableController();
         try {
             fcgiController.start(tableController::storeRowAndReturnAllTable);

@@ -2,7 +2,7 @@ package com.infernumvii.model;
 
 public class Cords {
     private int x;
-    private int y;
+    private int y; //TODO float
     private int R;
 
     public int getX() {

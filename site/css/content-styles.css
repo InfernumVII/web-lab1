@@ -49,6 +49,7 @@ input[type="text"]{
 .chart {
     width: fit-content;
 }
+/* TODO limit width */
 #info-table {
     width: fit-content;
     margin-left: 10px;

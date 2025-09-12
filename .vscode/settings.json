@@ -3,7 +3,7 @@
         "src"
     ],
     "java.project.referencedLibraries": [
-        "lib\\gson-2.13.1.jar",
-        "lib\\fastcgi-lib.jar"
+        "c:\\Users\\egor5\\OneDrive\\Documents\\web-lab1\\lib\\fastcgi-lib.jar",
+        "c:\\Users\\egor5\\OneDrive\\Documents\\web-lab1\\lib\\gson-2.13.1.jar"
     ]
 }
