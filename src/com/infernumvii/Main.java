@@ -26,11 +26,10 @@ public class Main {
     private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
     public static void main(String[] args) {
         FCGIController fcgiController = new FCGIController("9000");
-        TableController tableController = new TableController();
         try {
-            fcgiController.start(tableController::storeRowAndReturnAllTable);
+            fcgiController.start();
         } catch (Exception e) {
-            filePrinter.getPrintWriter().println(String.format("Error: %s", e.getMessage()));
+            Main.getFilePrinter().getPrintWriter().println(String.format("Error: %s", e.getMessage()));
         }
     }
     public static FilePrinter getFilePrinter() {
