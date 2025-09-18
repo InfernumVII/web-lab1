@@ -1,5 +1,6 @@
 package com.infernumvii.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Date;
 import java.util.Deque;
@@ -17,6 +18,17 @@ public class TableController {
     private final Deque<TableRow> history = new ArrayDeque<TableRow>(HISTORY_SIZE);
     private final Gson gson = new Gson();
 
+    private static final String tableHeader = """
+    <tr>
+        <th>x</th>
+        <th>y</th>
+        <th>R</th>
+        <th>currentTime</th>
+        <th>timeExecution</th>
+        <th>Success</th>
+    </tr>
+    """;
+
     public TableController(){
     }
 
@@ -27,23 +39,46 @@ public class TableController {
         history.addLast(row);
     }
 
-    private TableRow parseRow(String rawJson) throws CordsInvalidFormat{
-        long startTimeSeconds = System.currentTimeMillis();
+    private TableRow parseRow(String rawJson, long startTime) throws CordsInvalidFormat{
         Cords cords = gson.fromJson(rawJson, Cords.class);
         cords.validateCords();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
         boolean success = cords.IsPointInTheArea();
         TableRow tableRow = new TableRow(
             cords,
-            new Date(System.currentTimeMillis()).toString(),
-            System.currentTimeMillis() - startTimeSeconds,
+            formatter.format(date),
+            TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime), 
             success
         );
         
         return tableRow;
     }
 
-    public String storeRowAndReturnAllTable(String rawJson) throws CordsInvalidFormat{
-        storeRow(parseRow(rawJson));
-        return gson.toJson(history);
-    }   
+    public String storeRowAndReturnAllTable(String rawJson, long startTime) throws CordsInvalidFormat{
+        storeRow(parseRow(rawJson, startTime));
+        String tableContent = tableHeader;
+        for (TableRow tableRow : history) {
+            tableContent += String.format("""
+            <tr>
+                <td>%s</td>
+                <td>%s</td>
+                <td>%s</td>
+                <td>%s</td>
+                <td>%s micros</td>
+                <td>%s</td>
+            </tr>
+            """, 
+            tableRow.getCords().getX(),
+            tableRow.getCords().getY().toPlainString(),
+            tableRow.getCords().getR(),
+            tableRow.getCurrentTimeSeconds(),
+            tableRow.getTimeExecution(),
+            tableRow.isSuccess()
+            );
+        }
+        return tableContent;
+    }
+    
+    
 }

@@ -1,14 +1,15 @@
 const numberRegex = new RegExp("^-?\\d+\\.?\\d*$")
-const tableHeader = `
-<tr>
-    <th>x</th>
-    <th>y</th>
-    <th>R</th>
-    <th>currentTime</th>
-    <th>timeExecution</th>
-    <th>Success</th>
-</tr>
-`
+const chartStep = 176
+// const tableHeader = `
+// <tr>
+//     <th>x</th>
+//     <th>y</th>
+//     <th>R</th>
+//     <th>currentTime</th>
+//     <th>timeExecution</th>
+//     <th>Success</th>
+// </tr>
+// `
 function checkNumber(text){
     return numberRegex.test(text)
 }
@@ -35,13 +36,24 @@ function onInputTextUpdate(text){
     document.querySelector("#button-submit").disabled = !validation[0]
 }
 
+function drawPoint(x, y, R){
+    const globalStep = chartStep / R
+    const pointX = 220 + globalStep * x
+    const pointY = 220 - globalStep * y
+    const point = document.querySelector(".point")
+    point.setAttribute("cx", pointX)
+    point.setAttribute("cy", pointY)
+}
 
 function submitOnClick(){
-    parse
+    const x = document.querySelector('input[name="X"]:checked').value
+    const y = document.querySelector('#input-y').value
+    const R = document.querySelector('input[name="R"]:checked').value
+    
     var data = {
-        x: document.querySelector('input[name="X"]:checked').value,
-        y: document.querySelector('#input-y').value, 
-        R: document.querySelector('input[name="R"]:checked').value
+        x: x,
+        y: y, 
+        R: R
     }
     fetch("fcgi-app", {
         method: "POST",
@@ -50,22 +62,28 @@ function submitOnClick(){
         },
         body: JSON.stringify(data),
     })
-    .then((response) => response.json())
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        drawPoint(parseInt(x), parseFloat(y), parseInt(R))
+        return response.text();
+    })
     .then((data) => {
-        let tableContent = tableHeader;
-        data.forEach(element => {
-            tableContent += `
-            <tr>
-                <td>${element.cords.x}</td>
-                <td>${element.cords.y}</td>
-                <td>${element.cords.R}</td>
-                <td>${element.currentTimeSeconds}</td>
-                <td>${element.timeExecution}</td>
-                <td>${element.success}</td>
-            </tr>
-            `
-        });
-        document.getElementById("info-table").innerHTML = `<table>${tableContent}</table>`
+        // let tableContent = tableHeader;
+        // data.forEach(element => {
+        //     tableContent += `
+        //     <tr>
+        //         <td>${element.cords.x}</td>
+        //         <td>${element.cords.y}</td>
+        //         <td>${element.cords.R}</td>
+        //         <td>${element.currentTimeSeconds}</td>
+        //         <td>${element.timeExecution}</td>
+        //         <td>${element.success}</td>
+        //     </tr>
+        //     `
+        // });
+        document.getElementById("info-table").innerHTML = `<table>${data}</table>`
     })
     .catch((error) => {
        console.error(error); 

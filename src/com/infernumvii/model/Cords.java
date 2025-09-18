@@ -63,8 +63,8 @@ public class Cords {
      // return circleCond || triangleCond || squareCond;
      */
     public boolean IsPointInTheArea(){
-        boolean circleCond = (x >= 0 && y.compareTo(new BigDecimal(0)) >= 0 && new BigDecimal(x * x).add(y.pow(2)).compareTo(new BigDecimal(R*R/4)) <= 0);
-        boolean triangleCond = (x <= 0 && y.compareTo(new BigDecimal(0)) <= 0 && x >= -R && y.compareTo(new BigDecimal(-R)) >= 0 && y.compareTo(new BigDecimal(x - R)) >= 0);
+        boolean circleCond = (x >= 0 && y.compareTo(new BigDecimal(0)) >= 0 && new BigDecimal(x * x).add(y.pow(2)).compareTo(new BigDecimal(R*R/4.0f)) <= 0);
+        boolean triangleCond = (x <= 0 && y.compareTo(new BigDecimal(0)) <= 0 && y.compareTo(new BigDecimal(-0.5*x - R/2.0f)) >= 0);
         boolean squareCond = (x >= 0 && y.compareTo(new BigDecimal(0)) <= 0 && x <= R && y.compareTo(new BigDecimal(-R)) >= 0);
         return circleCond || triangleCond || squareCond;
     }

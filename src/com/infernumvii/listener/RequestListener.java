@@ -1,5 +1,7 @@
 package com.infernumvii.listener;
 
+import java.util.concurrent.TimeUnit;
+
 import com.fastcgi.FCGIInterface;
 import com.infernumvii.Main;
 import com.infernumvii.annotation.Request;
@@ -15,11 +17,12 @@ public class RequestListener {
     @Request(method = Method.POST)
     public void onPost(String body){
         try {
-            String answer = tableController.storeRowAndReturnAllTable(body);
+            long startTime = System.nanoTime();
+            String answer = tableController.storeRowAndReturnAllTable(body, startTime);
             System.out.println(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_200)
-                .withContentType(ContentType.APPLICATION_JSON)
+                .withContentType(ContentType.TEXT_HTML)
                 .withBody(answer)
                 .build()
                 .toString()

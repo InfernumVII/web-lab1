@@ -28,6 +28,9 @@ input[type="text"]{
 .figures {
     fill: #3399FF;
 }
+.point {
+    fill: red;
+}
 #button-submit {
     margin-top: 10px;
     background: linear-gradient(45deg, #6e3aff, #ff3864);
