@@ -6,6 +6,8 @@ import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
 import com.infernumvii.exception.CordsInvalidFormat;
 import com.infernumvii.model.Cords;
 import com.infernumvii.model.TableRow;
@@ -13,7 +15,9 @@ import com.infernumvii.model.TableRow;
 public class TableController {
     private final int HISTORY_SIZE = 18;
     private final Deque<TableRow> history = new ArrayDeque<TableRow>(HISTORY_SIZE);
-    private Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.BIG_DECIMAL)
+        .serializeSpecialFloatingPointValues()
+        .create();
 
     public TableController(){
     }

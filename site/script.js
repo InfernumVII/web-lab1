@@ -1,4 +1,4 @@
-const numberRegex = new RegExp("^-?\\d+\\.?\\d+$")
+const numberRegex = new RegExp("^-?\\d+\\.?\\d*$")
 const tableHeader = `
 <tr>
     <th>x</th>

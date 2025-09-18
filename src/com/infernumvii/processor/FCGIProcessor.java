@@ -34,10 +34,12 @@ public class FCGIProcessor {
     private static final RequestListener LISTENER = new RequestListener();
 
     static {
+        //TODO fix getDeclaredMethods doesn't prevent order
         Method[] declaredMethods = LISTENER.getClass().getDeclaredMethods();
         
         for (int i = declaredMethods.length - 1; i >= 0; i--) {
             Method m = declaredMethods[i];
+            Main.getFilePrinter().getPrintWriter().println(m.getName());
             if (m.isAnnotationPresent(Request.class)) {
                 Request cmd = m.getAnnotation(Request.class);
                 REQUESTS.put(cmd, m);
@@ -57,7 +59,8 @@ public class FCGIProcessor {
     public static boolean process() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException{
         String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
         String uri = FCGIInterface.request.params.getProperty("REQUEST_URI");
-
+        Main.getFilePrinter().getPrintWriter().println(method);
+        Main.getFilePrinter().getPrintWriter().println(uri);
         
         for (Entry<Request, Method> entry : REQUESTS.entrySet()) {
             Main.getFilePrinter().getPrintWriter().println(entry.getKey().method());
