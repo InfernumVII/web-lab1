@@ -15,9 +15,7 @@ import com.infernumvii.model.TableRow;
 public class TableController {
     private final int HISTORY_SIZE = 18;
     private final Deque<TableRow> history = new ArrayDeque<TableRow>(HISTORY_SIZE);
-    private final Gson gson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.BIG_DECIMAL)
-        .serializeSpecialFloatingPointValues()
-        .create();
+    private final Gson gson = new Gson();
 
     public TableController(){
     }

@@ -21,10 +21,12 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fastcgi.FCGIInterface;
 import com.infernumvii.Main;
 import com.infernumvii.annotation.Request;
+import com.infernumvii.annotation.MethodByRequestComparator;
 // import com.infernumvii.annotation.model.Method;
 import com.infernumvii.listener.RequestListener;
 
@@ -34,17 +36,16 @@ public class FCGIProcessor {
     private static final RequestListener LISTENER = new RequestListener();
 
     static {
-        //TODO fix getDeclaredMethods doesn't prevent order
-        Method[] declaredMethods = LISTENER.getClass().getDeclaredMethods();
-        
-        for (int i = declaredMethods.length - 1; i >= 0; i--) {
-            Method m = declaredMethods[i];
-            Main.getFilePrinter().getPrintWriter().println(m.getName());
-            if (m.isAnnotationPresent(Request.class)) {
+        Stream.of(LISTENER.getClass().getDeclaredMethods())
+            .filter(m -> m.isAnnotationPresent(Request.class))
+            .sorted(new MethodByRequestComparator())
+            .forEachOrdered((m) -> {
                 Request cmd = m.getAnnotation(Request.class);
                 REQUESTS.put(cmd, m);
-            }
-        }
+            });
+
+        
+
         Main.getFilePrinter().getPrintWriter().println(REQUESTS.size());
     }
 
@@ -74,4 +75,6 @@ public class FCGIProcessor {
         }
         return false;
     }
+
+
 }

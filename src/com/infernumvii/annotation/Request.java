@@ -1,5 +1,6 @@
 package com.infernumvii.annotation;
 import java.lang.annotation.*;
+import java.util.Comparator;
 
 import com.infernumvii.annotation.model.Method;
 
@@ -7,6 +8,6 @@ import com.infernumvii.annotation.model.Method;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Request {
-    Method method();
+    Method method() default Method.ANY;
     String uri() default "*";
 }

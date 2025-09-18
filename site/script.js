@@ -35,11 +35,13 @@ function onInputTextUpdate(text){
     document.querySelector("#button-submit").disabled = !validation[0]
 }
 
+
 function submitOnClick(){
+    parse
     var data = {
-        x: parseInt(document.querySelector('input[name="X"]:checked').value),
-        y: parseFloat(document.querySelector('#input-y').value), 
-        R: parseInt(document.querySelector('input[name="R"]:checked').value)
+        x: document.querySelector('input[name="X"]:checked').value,
+        y: document.querySelector('#input-y').value, 
+        R: document.querySelector('input[name="R"]:checked').value
     }
     fetch("fcgi-app", {
         method: "POST",
