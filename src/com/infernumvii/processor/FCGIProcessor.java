@@ -50,7 +50,11 @@ public class FCGIProcessor {
     }
 
     private static String getBody() throws IOException {
-        int contentLength = Integer.parseInt(FCGIInterface.request.params.getProperty("CONTENT_LENGTH"));
+        String CONTENT_LENGTH = FCGIInterface.request.params.getProperty("CONTENT_LENGTH");
+        if (CONTENT_LENGTH == null) {
+            return "";
+        }
+        int contentLength = Integer.parseInt(CONTENT_LENGTH);
         byte[] bytes = FCGIInterface.request.inStream.readNBytes(contentLength);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(byteArrayInputStream));

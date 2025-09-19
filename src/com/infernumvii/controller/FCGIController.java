@@ -33,7 +33,7 @@ public class FCGIController {
             try {
                 FCGIProcessor.process();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Main.getFilePrinter().getPrintWriter().println(e.getMessage());
+                e.printStackTrace(Main.getFilePrinter().getPrintWriter());
             }
         }
     }
