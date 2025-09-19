@@ -28,7 +28,7 @@ public class FCGIController {
     }
 
     public void start() throws IOException{
-        Main.getFilePrinter().getPrintWriter().println("Started");
+        Main.getFilePrinter().getPrintWriter().println("Started java");
         while (fcgiInterface.FCGIaccept() >= 0) {
             try {
                 FCGIProcessor.process();

@@ -29,7 +29,7 @@ public class Main {
         try {
             fcgiController.start();
         } catch (Exception e) {
-            Main.getFilePrinter().getPrintWriter().println(String.format("Error: %s", e.getMessage()));
+            e.printStackTrace(Main.getFilePrinter().getPrintWriter());
         }
     }
     public static FilePrinter getFilePrinter() {

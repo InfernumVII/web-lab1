@@ -46,7 +46,6 @@ public class FCGIProcessor {
 
         
 
-        Main.getFilePrinter().getPrintWriter().println(REQUESTS.size());
     }
 
     private static String getBody() throws IOException {
@@ -64,16 +63,15 @@ public class FCGIProcessor {
     public static boolean process() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException{
         String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
         String uri = FCGIInterface.request.params.getProperty("REQUEST_URI");
-        Main.getFilePrinter().getPrintWriter().println(method);
-        Main.getFilePrinter().getPrintWriter().println(uri);
+        Main.getFilePrinter().getPrintWriter().println(String.format("Method: %s\nURI: %s", method, uri));
         
         for (Entry<Request, Method> entry : REQUESTS.entrySet()) {
-            Main.getFilePrinter().getPrintWriter().println(entry.getKey().method());
-            Main.getFilePrinter().getPrintWriter().println(entry.getKey().uri());
             if ((entry.getKey().method().getName().equals(method) || entry.getKey().method().getName().equals("*")) &&
                  (entry.getKey().uri().equals(uri) || entry.getKey().uri().equals("*"))) {
                     Method methodActually = entry.getValue();
-                    methodActually.invoke(LISTENER, getBody());
+                    String body = getBody();
+                    Main.getFilePrinter().getPrintWriter().println(String.format("Body: %s", body));
+                    methodActually.invoke(LISTENER, body);
                     return true;
             }
         }
