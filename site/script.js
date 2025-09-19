@@ -55,7 +55,7 @@ function submitOnClick(){
         y: y, 
         R: R
     }
-    fetch("fcgi-app", {
+    fetch("api", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
