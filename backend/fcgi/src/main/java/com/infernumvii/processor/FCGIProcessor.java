@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +66,9 @@ public class FCGIProcessor {
         String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
         String uri = FCGIInterface.request.params.getProperty("REQUEST_URI");
         Main.getFilePrinter().getPrintWriter().println(String.format("Method: %s\nURI: %s", method, uri));
-        
+
+
+        Main.getFilePrinter().getPrintWriter().println(generateUniqueUserID());
         for (Entry<Request, Method> entry : REQUESTS.entrySet()) {
             if ((entry.getKey().method().getName().equals(method) || entry.getKey().method().getName().equals("*")) &&
                  (entry.getKey().uri().equals(uri) || entry.getKey().uri().equals("*"))) {
@@ -76,6 +80,29 @@ public class FCGIProcessor {
             }
         }
         return false;
+    }
+
+    public static String generateUniqueUserID(){
+        //REMOTE_ADDR
+        //HTTP_USER_AGENT
+        //HTTP_ACCEPT_LANGUAGE
+        //HTTP_SEC_CH_UA_PLATFORM
+        String REMOTE_ADDR = System.getProperty("REMOTE_ADDR");
+        String HTTP_USER_AGENT = System.getProperty("HTTP_USER_AGENT");
+        String HTTP_ACCEPT_LANGUAGE = System.getProperty("HTTP_ACCEPT_LANGUAGE");
+        String HTTP_SEC_CH_UA_PLATFORM = System.getProperty("HTTP_SEC_CH_UA_PLATFORM");
+        String uniqueString = String.format("%s|%s|%s|%s", REMOTE_ADDR, HTTP_USER_AGENT, HTTP_ACCEPT_LANGUAGE, HTTP_SEC_CH_UA_PLATFORM);
+        MessageDigest md = null; 
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+        byte[] theMD5digest = md.digest(uniqueString.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (byte b : theMD5digest) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 
 
