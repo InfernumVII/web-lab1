@@ -15,24 +15,20 @@ import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.fastcgi.*;
+import com.infernumvii.fastcgi.*;
 import com.google.gson.*;
 import com.infernumvii.controller.FCGIController;
 import com.infernumvii.controller.TableController;
 import com.infernumvii.exception.CordsInvalidFormat;
-import com.infernumvii.util.FilePrinter;
+
 
 public class Main {
-    private static FilePrinter filePrinter = new FilePrinter(Path.of("logs/log.txt"));
     public static void main(String[] args) {
         FCGIController fcgiController = new FCGIController("9000");
         try {
             fcgiController.start();
         } catch (Exception e) {
-            e.printStackTrace(Main.getFilePrinter().getPrintWriter());
+            e.printStackTrace();
         }
-    }
-    public static FilePrinter getFilePrinter() {
-        return filePrinter;
     }
 }

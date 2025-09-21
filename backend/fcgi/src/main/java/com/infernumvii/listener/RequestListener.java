@@ -1,8 +1,16 @@
 package com.infernumvii.listener;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import com.fastcgi.FCGIInterface;
+import com.infernumvii.fastcgi.FCGIInterface;
+import com.infernumvii.fastcgi.FCGIRequest;
 import com.infernumvii.Main;
 import com.infernumvii.annotation.Request;
 import com.infernumvii.annotation.model.Method;
@@ -12,14 +20,50 @@ import com.infernumvii.http.Response;
 import com.infernumvii.http.StatusCode;
 
 public class RequestListener {
-    private static final TableController tableController = new TableController();
+    private TableController tableController = null;
+    private FCGIRequest fcgiRequest = null;
+    private PrintStream out = null;
+    private String body;
+    private long startTime;
+    
+
+    public RequestListener() {
+    }
+
+    public RequestListener(TableController tableController, FCGIRequest fcgiRequest, long startTime){
+        this.tableController = tableController;
+        this.fcgiRequest = fcgiRequest;
+        body = getBody();
+        System.out.println(body);
+        this.startTime = startTime;
+        out = new PrintStream(new BufferedOutputStream(fcgiRequest.outStream, 8192), true);
+    }
+
+    private String getBody() {
+        try {
+            String CONTENT_LENGTH = fcgiRequest.params.getProperty("CONTENT_LENGTH");
+            if (CONTENT_LENGTH == null) {
+                return "";
+            }
+            int contentLength = Integer.parseInt(CONTENT_LENGTH);
+            byte[] bytes;
+            bytes = fcgiRequest.inStream.readNBytes(contentLength);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(byteArrayInputStream));
+            return bufferedReader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    
 
     @Request(method = Method.POST)
-    public void onPost(String body){
+    public void onPost(){
         try {
-            long startTime = System.nanoTime();
             String answer = tableController.storeRowAndReturnAllTable(body, startTime);
-            System.out.println(
+            out.println(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_200)
                 .withContentType(ContentType.TEXT_HTML)
@@ -28,7 +72,7 @@ public class RequestListener {
                 .toString()
             );
         } catch (Exception e) {
-            System.out.println(
+            out.println(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_400)
                 .withContentType(ContentType.TEXT_PLAIN)
@@ -40,10 +84,10 @@ public class RequestListener {
     }
 
     @Request(method = Method.ANY)
-    public void onAny(String body){
-        System.out.println(
+    public void onAny(){
+        out.println(
             new Response.Builder()
-            .withStatusCode(StatusCode.C_405)
+            .withStatusCode(StatusCode.C_200)
             .withContentType(ContentType.TEXT_PLAIN)
             .withBody("Method is not allowed")
             .build()

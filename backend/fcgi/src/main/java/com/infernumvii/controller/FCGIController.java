@@ -8,15 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.fastcgi.FCGIInterface;
-import com.google.gson.Gson;
-import com.infernumvii.Main;
-import com.infernumvii.annotation.Request;
-import com.infernumvii.annotation.model.Method;
-import com.infernumvii.http.ContentType;
-import com.infernumvii.http.Response;
-import com.infernumvii.http.StatusCode;
+import com.infernumvii.fastcgi.FCGIInterface;
 import com.infernumvii.processor.FCGIProcessor;
+import com.infernumvii.*;
+
 
 public class FCGIController {
     private String port = "9000";
@@ -28,12 +23,12 @@ public class FCGIController {
     }
 
     public void start() throws IOException{
-    Main.getFilePrinter().getPrintWriter().println("Started java!!!!!");
+    System.out.println("Started java!!!!!");
         while (fcgiInterface.FCGIaccept() >= 0) {
             try {
                 FCGIProcessor.process();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                e.printStackTrace(Main.getFilePrinter().getPrintWriter());
+                e.printStackTrace();
             }
         }
     }
