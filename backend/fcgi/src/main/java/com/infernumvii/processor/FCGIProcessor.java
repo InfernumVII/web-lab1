@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,8 +36,8 @@ import com.infernumvii.listener.RequestListener;
 
 public class FCGIProcessor {
     private static final Map<Request, Method> REQUESTS = new LinkedHashMap<>();
-
     private static final RequestListener LISTENER = new RequestListener();
+    private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     static {
         Stream.of(LISTENER.getClass().getDeclaredMethods())
@@ -45,9 +47,6 @@ public class FCGIProcessor {
                 Request cmd = m.getAnnotation(Request.class);
                 REQUESTS.put(cmd, m);
             });
-
-        
-
     }
 
     private static String getBody() throws IOException {
