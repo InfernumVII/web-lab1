@@ -2,7 +2,6 @@ package com.infernumvii.model;
 
 import java.math.BigDecimal;
 
-import com.infernumvii.Main;
 import com.infernumvii.exception.CordsInvalidFormat;
 
 public class Cords {

@@ -6,12 +6,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.infernumvii.fastcgi.FCGIInterface;
 import com.infernumvii.fastcgi.FCGIRequest;
-import com.infernumvii.Main;
 import com.infernumvii.annotation.Request;
 import com.infernumvii.annotation.model.Method;
 import com.infernumvii.controller.TableController;

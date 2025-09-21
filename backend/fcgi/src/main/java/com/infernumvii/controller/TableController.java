@@ -7,8 +7,6 @@ import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.ToNumberPolicy;
 import com.infernumvii.exception.CordsInvalidFormat;
 import com.infernumvii.model.Cords;
 import com.infernumvii.model.TableRow;

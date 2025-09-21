@@ -1,6 +1,5 @@
 package com.infernumvii.annotation;
 import java.lang.annotation.*;
-import java.util.Comparator;
 
 import com.infernumvii.annotation.model.Method;
 
