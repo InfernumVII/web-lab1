@@ -1,8 +1,6 @@
 package com.infernumvii;
 import com.infernumvii.controller.FCGIController;
 
-
-
 public class Main {
     public static void main(String[] args) {
         FCGIController fcgiController = new FCGIController("9000");

@@ -1,9 +1,11 @@
 {
     "java.project.sourcePaths": [
-        "src"
+        "src\\main\\java"
     ],
     "java.project.referencedLibraries": [
-        "lib\\fastcgi.jar",
+        "lib\\reactive-streams-1.0.4.jar",
+        "lib\\reactor-core-3.7.11.jar",
+        "lib\\fastcgi-lib.jar",
         "lib\\gson-2.13.1.jar"
     ]
 }
