@@ -6,20 +6,22 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import com.infernumvii.fastcgi.FCGIRequest;
 import com.infernumvii.annotation.Request;
 import com.infernumvii.annotation.model.Method;
 import com.infernumvii.controller.TableController;
+import com.infernumvii.fcgi.FCGIContext;
+import com.infernumvii.fcgi.FCGIWriteContext;
 import com.infernumvii.http.ContentType;
 import com.infernumvii.http.Response;
 import com.infernumvii.http.StatusCode;
 
 public class RequestListener {
     private TableController tableController = null;
-    private FCGIRequest fcgiRequest = null;
-    private PrintStream out = null;
+    private FCGIContext fcgiRequest = null;
+    private FCGIWriteContext out = null;
     private String body;
     private long startTime;
     
@@ -27,40 +29,23 @@ public class RequestListener {
     public RequestListener() {
     }
 
-    public RequestListener(TableController tableController, FCGIRequest fcgiRequest, long startTime){
+    public RequestListener(TableController tableController, FCGIContext fcgiRequest, FCGIWriteContext writeContext, long startTime){
         this.tableController = tableController;
         this.fcgiRequest = fcgiRequest;
-        body = getBody();
-        System.out.println(body);
+        this.out = writeContext;
+        body = new String(fcgiRequest.getStdinData().array(), StandardCharsets.UTF_8);
         this.startTime = startTime;
-        out = new PrintStream(new BufferedOutputStream(fcgiRequest.outStream, 8192), true);
     }
 
-    private String getBody() {
-        try {
-            String CONTENT_LENGTH = fcgiRequest.params.getProperty("CONTENT_LENGTH");
-            if (CONTENT_LENGTH == null) {
-                return "";
-            }
-            int contentLength = Integer.parseInt(CONTENT_LENGTH);
-            byte[] bytes;
-            bytes = fcgiRequest.inStream.readNBytes(contentLength);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(byteArrayInputStream));
-            return bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+
 
     
 
     @Request(method = Method.POST)
-    public void onPost(){
+    public void onPost() throws IOException{
         try {
             String answer = tableController.storeRowAndReturnAllTable(body, startTime);
-            out.println(
+            out.write(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_200)
                 .withContentType(ContentType.TEXT_HTML)
@@ -69,7 +54,7 @@ public class RequestListener {
                 .toString()
             );
         } catch (Exception e) {
-            out.println(
+            out.write(
                 new Response.Builder()
                 .withStatusCode(StatusCode.C_400)
                 .withContentType(ContentType.TEXT_PLAIN)
@@ -81,8 +66,8 @@ public class RequestListener {
     }
 
     @Request(method = Method.ANY)
-    public void onAny(){
-        out.println(
+    public void onAny() throws IOException{
+        out.write(
             new Response.Builder()
             .withStatusCode(StatusCode.C_200)
             .withContentType(ContentType.TEXT_PLAIN)

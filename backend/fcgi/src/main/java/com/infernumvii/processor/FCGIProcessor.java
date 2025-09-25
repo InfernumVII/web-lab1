@@ -13,11 +13,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
-
-import com.infernumvii.fastcgi.FCGIInterface;
-import com.infernumvii.fastcgi.FCGIRequest;
 import com.infernumvii.annotation.Request;
 import com.infernumvii.controller.TableController;
+import com.infernumvii.fcgi.FCGIContext;
+import com.infernumvii.fcgi.FCGIReadContext;
+import com.infernumvii.fcgi.FCGIServer;
 import com.infernumvii.annotation.MethodByRequestComparator;
 // import com.infernumvii.annotation.model.Method;
 import com.infernumvii.listener.RequestListener;
@@ -25,7 +25,6 @@ import com.infernumvii.listener.RequestListener;
 public class FCGIProcessor {
     private static final Map<Request, Method> REQUESTS = new LinkedHashMap<>();
     private static final RequestListener LISTENER = new RequestListener();
-    private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     private static final ConcurrentMap<String, TableController> tableControllers = new ConcurrentHashMap<>();
 
     static {
@@ -40,9 +39,10 @@ public class FCGIProcessor {
 
     
 
-    public static boolean process() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException{
-        String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
-        String uri = FCGIInterface.request.params.getProperty("REQUEST_URI");
+    public static boolean process(FCGIReadContext fcgiReadContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException{
+        FCGIContext request = fcgiReadContext.getFcgiContext();
+        String method = request.getParams().get("REQUEST_METHOD");
+        String uri = request.getParams().get("REQUEST_URI");
         System.out.println(String.format("Method: %s\nURI: %s", method, uri));
 
 
@@ -50,20 +50,18 @@ public class FCGIProcessor {
             if ((entry.getKey().method().getName().equals(method) || entry.getKey().method().getName().equals("*")) &&
                  (entry.getKey().uri().equals(uri) || entry.getKey().uri().equals("*"))) {
                     Method methodActually = entry.getValue();
-                    final FCGIRequest currentRequest = FCGIInterface.request;
-                    executor.execute(() -> {
-                        try {
-                            FCGIRequest request = currentRequest;
+                    
+                    FCGIServer.getCpuExecutor().execute(() -> {
                             long startTime = System.nanoTime();
                             TableController tableController = gTableController(request);
-                            RequestListener requestListener = new RequestListener(tableController, request, startTime);
-                            methodActually.invoke(requestListener);
-                            request.outStream.close();
-                            request.errStream.close();
-                        } catch (IllegalAccessException | InvocationTargetException | IOException e) {
-                            e.printStackTrace();
-                        }
-                        
+                            RequestListener requestListener = new RequestListener(tableController, request, fcgiReadContext.getFcgiWriteContext(), startTime);
+                            try {
+                                methodActually.invoke(requestListener);
+                                fcgiReadContext.getSocketChannel().close();
+                            } catch (IllegalAccessException | InvocationTargetException | IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            
                     });
                     
                     return true;
@@ -72,15 +70,16 @@ public class FCGIProcessor {
         return false;
     }
 
-    private static String getUniqueUserID(FCGIRequest request){
+    private static String getUniqueUserID(FCGIContext request){
         //REMOTE_ADDR
         //HTTP_USER_AGENT
         //HTTP_ACCEPT_LANGUAGE
         //HTTP_SEC_CH_UA_PLATFORM
-        String REMOTE_ADDR = request.params.getProperty("REMOTE_ADDR");
-        String HTTP_USER_AGENT = request.params.getProperty("HTTP_USER_AGENT");
-        String HTTP_ACCEPT_LANGUAGE = request.params.getProperty("HTTP_ACCEPT_LANGUAGE");
-        String HTTP_SEC_CH_UA_PLATFORM = request.params.getProperty("HTTP_SEC_CH_UA_PLATFORM");
+        
+        String REMOTE_ADDR = request.getParams().get("REMOTE_ADDR");
+        String HTTP_USER_AGENT = request.getParams().get("HTTP_USER_AGENT");
+        String HTTP_ACCEPT_LANGUAGE = request.getParams().get("HTTP_ACCEPT_LANGUAGE");
+        String HTTP_SEC_CH_UA_PLATFORM = request.getParams().get("HTTP_SEC_CH_UA_PLATFORM");
         String uniqueString = String.format("%s|%s|%s|%s", REMOTE_ADDR, HTTP_USER_AGENT, HTTP_ACCEPT_LANGUAGE, HTTP_SEC_CH_UA_PLATFORM);
         MessageDigest md = null; 
         try {
@@ -95,7 +94,7 @@ public class FCGIProcessor {
         return sb.toString();
     }
 
-    private static TableController gTableController(FCGIRequest request){
+    private static TableController gTableController(FCGIContext request){
         String userId = getUniqueUserID(request);
         tableControllers.putIfAbsent(userId, new TableController());
         return tableControllers.get(userId);
