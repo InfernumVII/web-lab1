@@ -20,7 +20,19 @@ services:
       - DB_NAME=appdb
       - DB_USER=appuser
       - DB_PASS=apppass
-
+  backend1:
+    build: backend
+    
+    command: ./entrypoint.sh
+    
+    depends_on:
+        - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=appdb
+      - DB_USER=appuser
+      - DB_PASS=apppass
   
   frontend:
     build: frontend
