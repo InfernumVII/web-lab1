@@ -15,7 +15,7 @@ public class Cords {
     private static final int minR = 1;
     private static final int maxR = 5;
 
-    private Cords(int x, BigDecimal y, int R){
+    public Cords(int x, BigDecimal y, int R){
         this.x = x;
         this.y = y;
         this.R = R;

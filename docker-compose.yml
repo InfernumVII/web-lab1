@@ -1,16 +1,34 @@
 services:
-    backend:
-      build: backend
 
-      command: ./entrypoint.sh
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=appdb
+      - POSTGRES_USER=appuser
+      - POSTGRES_PASSWORD=apppass
+
+  backend:
+    build: backend
+
+    command: ./entrypoint.sh
+
+    depends_on:
+        - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=appdb
+      - DB_USER=appuser
+      - DB_PASS=apppass
 
   
-    frontend:
-      build: frontend
+  frontend:
+    build: frontend
 
-      ports:
-        - 24000:24000
+    ports:
+      - 24000:24000
 
-      # depends_on:
-      #   - backend
+    depends_on:
+      - backend
+    
 

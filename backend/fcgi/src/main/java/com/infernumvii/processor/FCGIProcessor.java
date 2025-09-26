@@ -5,6 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,8 +29,18 @@ public class FCGIProcessor {
     private static final Map<Request, Method> REQUESTS = new LinkedHashMap<>();
     private static final RequestListener LISTENER = new RequestListener();
     private static final ConcurrentMap<String, TableController> tableControllers = new ConcurrentHashMap<>();
+    private static final Connection DB_CONNECTION;
 
     static {
+        try {
+            String url = "jdbc:postgresql://db:5432/appdb";
+            String user = "appuser";
+            String password = "apppass";
+            DB_CONNECTION = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to connect to database", e);
+        }
+
         Stream.of(LISTENER.getClass().getDeclaredMethods())
             .filter(m -> m.isAnnotationPresent(Request.class))
             .sorted(new MethodByRequestComparator())
@@ -35,7 +48,7 @@ public class FCGIProcessor {
                 Request cmd = m.getAnnotation(Request.class);
                 REQUESTS.put(cmd, m);
             });
-    }
+        }
 
     
 
@@ -53,7 +66,7 @@ public class FCGIProcessor {
                     
                     FCGIServer.getCpuExecutor().execute(() -> {
                             long startTime = System.nanoTime();
-                            TableController tableController = gTableController(request);
+                            TableController tableController = getTableController(getUniqueUserID(request));
                             RequestListener requestListener = new RequestListener(tableController, request, fcgiReadContext.getFcgiWriteContext(), startTime);
                             try {
                                 methodActually.invoke(requestListener);
@@ -94,9 +107,7 @@ public class FCGIProcessor {
         return sb.toString();
     }
 
-    private static TableController gTableController(FCGIContext request){
-        String userId = getUniqueUserID(request);
-        tableControllers.putIfAbsent(userId, new TableController());
-        return tableControllers.get(userId);
+    private static TableController getTableController(String userId) {
+        return tableControllers.computeIfAbsent(userId, k -> new TableController(DB_CONNECTION, userId));
     }
 }

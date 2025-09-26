@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 import com.infernumvii.annotation.Request;
@@ -66,12 +67,12 @@ public class RequestListener {
     }
 
     @Request(method = Method.ANY)
-    public void onAny() throws IOException{
+    public void onAny() throws IOException, SQLException{
         out.write(
             new Response.Builder()
             .withStatusCode(StatusCode.C_200)
-            .withContentType(ContentType.TEXT_PLAIN)
-            .withBody("Method is not allowed")
+            .withContentType(ContentType.TEXT_HTML)
+            .withBody(tableController.returnAllTable(startTime))
             .build()
             .toString()
         );

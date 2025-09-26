@@ -31,11 +31,12 @@ public class FCGIServer {
     
 
     public FCGIServer() throws IOException {
-        this("127.0.0.1", 9000);
+        this("0.0.0.0", 9000);
     }
 
 
     public void start() throws IOException {
+        System.out.println("Started");
         while (selector.isOpen()) {
             selector.select();
     

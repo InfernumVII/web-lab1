@@ -7,5 +7,6 @@
         "lib\\reactor-core-3.7.11.jar",
         "lib\\fastcgi-lib.jar",
         "lib\\gson-2.13.1.jar"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
 }
